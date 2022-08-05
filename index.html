@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+ 
+    <script src= "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script> 
+     
+</head>
+<body>
+<div class="container">
+
+ 
+ <div class="login" id="login">
+    <div class="formulario">
+        <div id="resposta" style="margin: 10%">
+          <h1 style="font-size: 30px;"> Agora insira o numero e veja se a rede aprendeu o padrao:</h1>
+          <input type="number" name="numero5" placeholder="insira o primeiro numero" required="required" />
+          <button  onclick="calcular()" class="btn btn-primary btn-block btn-large">calcular</button>
+        </div>
+        <div id="resposta2" style="margin: 10%">
+            
+            
+          </div>
+        <div id="numeros">
+	<h1>Exemplo de Regressão linar</h1>
+    
+    	<input type="number" name="numero1" placeholder="insira o primeiro numero"  />
+
+       	<input type="number" name="numero2" placeholder="insira o segundo numero"  />
+         	<input type="number" name="numero3" placeholder="insira o resultado do primeiro numero por exemplo (primeiroNumero X 3)"  />
+         	<input type="number" name="numero4" placeholder="insira o resultado do segundo numero"  />
+        <button  onclick="mostra()" class="btn btn-primary btn-block btn-large">treinar</button>
+    
+</div>
+</div>
+
+     </div>
+
+
+    <div class="carregamento" id="loader">
+        <h1 id="respostaFinal">Resultado Aproximado: </h1><br>
+        <input id="refresh"   style="width: 20%; margin-left: 10%" class="btn btn-primary btn-block type="button" value="Voltar" onClick="window.location.reload()">
+
+    
+</div>
+   <script>
+      document.getElementById("loader").hidden = true;
+      document.getElementById("resposta").hidden = true;
+      document.getElementById("resposta2").hidden = true;
+
+      function mostra() {
+        var numero1=document.getElementsByName('numero1')[0].value;
+        var numero2=document.getElementsByName('numero2')[0].value;
+        var numero3=document.getElementsByName('numero3')[0].value;
+        var numero4=document.getElementsByName('numero4')[0].value;
+        console.log(numero1)
+        numero1= parseFloat(numero1);
+        numero2 =parseFloat(numero2);
+        numero3= parseFloat(numero3);
+        numero4= parseFloat(numero4);
+        console.log(numero4)
+       document.getElementById("loader").hidden = false;
+       document.getElementById("resposta").hidden = false;
+       document.getElementById("numeros").hidden = true;
+       // Define a model for linear regression.
+    const model = tf.sequential();
+    model.add(tf.layers.dense({units: 1, inputShape: [1]}));
+    model.add(tf.layers.dense({units: 1, activation: 'linear'}));
+    model.compile({loss: 'meanAbsoluteError', optimizer: 'sgd'})
+    
+  
+    
+    // Generate some synthetic data for training.
+    const xs = tf.tensor1d([numero1, numero2]);
+    const ys = tf.tensor1d([numero3, numero4]);
+
+    
+    
+    // Train the model using the data.
+    model.fit(xs, ys, {epochs: 1000}).then(async() => {
+        console.log('deuuu')
+
+        const saveResult = await model.save('localstorage://my-model-1');
+      // Use the model to do inference on a data point the model hasn't seen before:
+      
+      // Open the browser devtools to see the output
+    });
+      }
+      async function calcular(){
+        const model = await tf.loadLayersModel('localstorage://my-model-1');
+        var numero5=document.getElementsByName('numero5')[0].value;
+        document.getElementById("resposta2").hidden = false;
+      
+        numero5= parseFloat(numero5);
+        var resultado= await model.predict(tf.tensor2d([numero5], [1, 1])).data()
+        resultado= await parseFloat(resultado).toFixed( 2 )
+        document.getElementById("respostaFinal").innerHTML='resultado aproximado:  '+resultado
+      }
+
+
+    </script>
+
+
+   </div>
+
+   
+<script> </script>
+</body>
+</html>
