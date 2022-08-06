@@ -79,7 +79,7 @@
     
     
     // Train the model using the data.
-    model.fit(xs, ys, {epochs: 1000}).then(async() => {
+    model.fit(xs, ys, {epochs: 3000}).then(async() => {
         console.log('deuuu')
 
         const saveResult = await model.save('localstorage://my-model-1');
