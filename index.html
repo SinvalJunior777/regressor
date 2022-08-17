@@ -51,6 +51,8 @@
       document.getElementById("resposta2").hidden = true;
 
       function mostra() {
+        window.localStorage.clear();
+        window.localStorage.removeItem("my-model-1");
         var numero1=document.getElementsByName('numero1')[0].value;
         var numero2=document.getElementsByName('numero2')[0].value;
         var numero3=document.getElementsByName('numero3')[0].value;
